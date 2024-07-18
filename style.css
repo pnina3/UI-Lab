@@ -1,7 +1,9 @@
 :root {
     --main-border-color: #BFBFBF;
     --primary-color: #F9E2FA;
-    --table-header-color: #f0f0f0
+    --table-header-color: #f0f0f0;
+    --black-color:#000
+
   }
 
 html{
