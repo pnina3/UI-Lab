@@ -43,35 +43,47 @@ export function createTag(tagText, tagId) {
 
   return tagWrapper;
 }
-// Function to create HTML table
-export function createTable(level1_arr, level2_arr) {
-  const table = document.createElement('table');
-  const thead = document.createElement('thead');
-  const tbody = document.createElement('tbody');
+// Function to update or create a table based on provided arrays
+export function updateOrCreateTable(table, level1_arr, level2_arr, action) {
+  // Find or create thead and tbody
+  let thead = table.querySelector('thead');
+  if (!thead) {
+    thead = document.createElement('thead');
+    table.appendChild(thead);
+  }
 
-  // Create the header row
-  const headerRow = document.createElement('tr');
-  level1_arr.forEach((headerText) => {
-    const header = document.createElement('th');
-    header.textContent = headerText;
-    headerRow.appendChild(header);
-  });
-  thead.appendChild(headerRow);
+  let tbody = table.querySelector('tbody');
+  if (!tbody) {
+    tbody = document.createElement('tbody');
+    table.appendChild(tbody);
+  } else if (action === 'filter') {
+    // Clear existing rows if filtering
+    while (tbody.firstChild) {
+      tbody.removeChild(tbody.firstChild);
+    }
+  }
+
+  // Create the header row if it's empty
+  if (thead.rows.length === 0) {
+    const headerRow = document.createElement('tr');
+    level1_arr.forEach((headerText) => {
+      const header = document.createElement('th');
+      header.textContent = headerText;
+      headerRow.appendChild(header);
+    });
+    thead.appendChild(headerRow);
+  }
 
   // Create the body rows
-  const numRows = level2_arr[0].length; // assuming each sub-array is the same length
-  for (let i = 0; i < numRows; i++) {
+  level2_arr[0].forEach((_, index) => {
     const row = document.createElement('tr');
     level2_arr.forEach((columnData) => {
       const cell = document.createElement('td');
-      cell.textContent = columnData[i];
+      cell.textContent = columnData[index];
       row.appendChild(cell);
     });
     tbody.appendChild(row);
-  }
+  });
 
-  // Append thead and tbody to table
-  table.appendChild(thead);
-  table.appendChild(tbody);
   return table;
 }
