@@ -51,7 +51,7 @@ select{
 }
 
 
-#fileds-container{
+#fields-container{
     position:absolute;
     top:100%;
     left:0px;
@@ -64,10 +64,10 @@ select{
     flex-direction: column;
     background-color: #fff;
 }
-#fileds-container select{
+#fields-container select{
     margin-bottom: 20px;
 }
-#fileds-container.hidden{
+#fields-container.hidden{
     display:none;
 }
 .add_tag{
