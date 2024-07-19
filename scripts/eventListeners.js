@@ -6,7 +6,7 @@ import {
   populateSelectList,
   clearSelectList,
   createTag,
-  createTable,
+  updateOrCreateTable,
 } from './domUtils.js';
 
 export function initializeEventListeners(
@@ -18,6 +18,8 @@ export function initializeEventListeners(
   addButton,
   clearAllButton,
   submitButton,
+  table,
+  filterArray,
   tagsArray,
   variables
 ) {
@@ -32,9 +34,9 @@ export function initializeEventListeners(
   } = variables;
 
   // Assuming you have a div with id 'table-container' in your HTML to append the table
-  document
-    .getElementById('table-container')
-    .appendChild(createTable(level1_arr, level2_arr));
+  // document
+  //   .getElementById('table-container')
+  //   .appendChild(createTable(level1_arr, level2_arr));
 
   level1Container.addEventListener('change', function (e) {
     e.preventDefault();
@@ -110,11 +112,11 @@ export function initializeEventListeners(
     }
     clearFields(level1Container, level2Container, operatorContainer);
     clearSelectList(level2Container);
+    filterData(fieldData, operatorData, valueData, filterArray, table);
   });
 
   //EDIT
   mainContainer.addEventListener('click', function (e) {
-    console.log(level2Container);
     const tagWrapper = e.target.closest('.tag_wrapper');
 
     // if user clicked on the tag
@@ -260,4 +262,19 @@ function assignSelectedValues(
       }
     }
   });
+}
+function filterData(fieldData, operatorData, valueData, filterArray, table) {
+  level1_arr.forEach(function (item, level1Index) {
+    if (item == fieldData) {
+      level2_arr[level1Index].forEach(function (item, level2Index) {
+        if (item != valueData) {
+          level2_arr.forEach(function (item, index) {
+            filterArray.push([]);
+            filterArray[index].push(item[level2Index]);
+          });
+        }
+      });
+    }
+  });
+  updateOrCreateTable(table, level1_arr, filterArray, 'filter');
 }
