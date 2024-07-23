@@ -75,6 +75,9 @@ export function updateOrCreateTable(table, level1_arr, level2_arr, action) {
   }
 
   // Create the body rows
+
+  resetTableRows(tbody);
+
   level2_arr[0].forEach((_, index) => {
     const row = document.createElement('tr');
     level2_arr.forEach((columnData) => {
@@ -86,4 +89,10 @@ export function updateOrCreateTable(table, level1_arr, level2_arr, action) {
   });
 
   return table;
+}
+
+function resetTableRows(tbody) {
+  while (tbody.firstChild) {
+    tbody.removeChild(tbody.firstChild);
+  }
 }

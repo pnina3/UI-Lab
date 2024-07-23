@@ -30,7 +30,7 @@ export function initializeEventListeners(
     operatorData,
     currentIndex,
     selectedTag,
-    generatedID,
+    generatedID = 0,
   } = variables;
 
   // Assuming you have a div with id 'table-container' in your HTML to append the table
@@ -62,6 +62,25 @@ export function initializeEventListeners(
   mainContainer.addEventListener('click', function (e) {
     if (e.target.classList.contains('close')) {
       const parentTag = e.target.parentElement;
+      const dataDiv = parentTag.querySelector('div[data-id]'); // Select the div containing the data
+      if (dataDiv) {
+        tagsArray.forEach(function (item) {
+          if (item.id == dataDiv.dataset.id) {
+            fieldData = item.field;
+            valueData = item.value;
+            operatorData = item.operator;
+            manageFilters(
+              fieldData,
+              operatorData,
+              valueData,
+              filterArray,
+              table,
+              'delete'
+            );
+          }
+        });
+      }
+
       parentTag.remove();
     }
   });
@@ -89,6 +108,7 @@ export function initializeEventListeners(
   //SUBMIT
   submitButton.addEventListener('click', function (e) {
     if (actionStatus === 'new') {
+      generatedID++;
       assignTagValues(
         mainContainer,
         addButton,
@@ -98,7 +118,7 @@ export function initializeEventListeners(
         operatorData,
         valueData
       );
-      generatedID++;
+
       calcFieldsContainerPosition('new', fieldsContainer, tagsArray);
     } else {
       updateTags(
@@ -112,7 +132,14 @@ export function initializeEventListeners(
     }
     clearFields(level1Container, level2Container, operatorContainer);
     clearSelectList(level2Container);
-    filterData(fieldData, operatorData, valueData, filterArray, table);
+    manageFilters(
+      fieldData,
+      operatorData,
+      valueData,
+      filterArray,
+      table,
+      'add'
+    );
   });
 
   //EDIT
@@ -263,18 +290,71 @@ function assignSelectedValues(
     }
   });
 }
-function filterData(fieldData, operatorData, valueData, filterArray, table) {
-  level1_arr.forEach(function (item, level1Index) {
-    if (item == fieldData) {
-      level2_arr[level1Index].forEach(function (item, level2Index) {
-        if (item != valueData) {
+
+function manageFilters(
+  fieldData,
+  operatorData,
+  valueData,
+  filterArray,
+  table,
+  action
+) {
+  const fieldIndex = level1_arr.indexOf(fieldData);
+
+  if (fieldIndex !== -1) {
+    if (action === 'add') {
+      level2_arr[fieldIndex].forEach((item, level2Index) => {
+        // Apply filter based on operator
+        let conditionMet = false;
+        switch (operatorData) {
+          case '=':
+            conditionMet = item === valueData;
+            break;
+          case '<>':
+            conditionMet = item !== valueData;
+            break;
+        }
+
+        if (conditionMet) {
+          // Adding filtered data to an array
           level2_arr.forEach(function (item, index) {
-            filterArray.push([]);
+            if (!filterArray[index]) {
+              filterArray[index] = [];
+            }
             filterArray[index].push(item[level2Index]);
           });
         }
+        console.log('this is the array ' + filterArray);
       });
+    } else if (action === 'delete') {
+      // Iterate over filterArray and remove elements based on the condition
+      filterArray.forEach((subArray, index) => {
+        for (let i = subArray.length - 1; i >= 0; i--) {
+          // Apply filter based on operator
+          let conditionMet = false;
+          switch (operatorData) {
+            case '=':
+              conditionMet = subArray[i] === valueData;
+              break;
+            case '<>':
+              conditionMet = subArray[i] !== valueData;
+              break;
+          }
+          if (conditionMet) {
+            subArray.splice(i, 1);
+          }
+        }
+      });
+      console.log('Updated filterArray: ', filterArray);
     }
-  });
-  updateOrCreateTable(table, level1_arr, filterArray, 'filter');
+
+    if (
+      filterArray.length > 0 &&
+      filterArray.some((subArray) => subArray.length > 0)
+    ) {
+      updateOrCreateTable(table, level1_arr, filterArray, 'filter');
+    } else {
+      updateOrCreateTable(table, level1_arr, level2_arr, 'new');
+    }
+  }
 }
