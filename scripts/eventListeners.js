@@ -370,7 +370,7 @@ function manageFilters(
     // }
   }
 }
-//test comment
+//test comment 123
 function removeDuplicates(filterArray) {
   const uniqueSet = new Set();
   //create new empty multidimentional array
