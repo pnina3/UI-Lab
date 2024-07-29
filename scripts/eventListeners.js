@@ -324,37 +324,72 @@ function manageFilters(
             filterArray[index].push(item[level2Index]);
           });
         }
-        console.log('this is the array ' + filterArray);
       });
+      filterArray = removeDuplicates(filterArray); // Remove duplicates after adding new items
     } else if (action === 'delete') {
+      filterArray = removeDuplicates(filterArray);
       // Iterate over filterArray and remove elements based on the condition
-      filterArray.forEach((subArray, index) => {
-        for (let i = subArray.length - 1; i >= 0; i--) {
-          // Apply filter based on operator
-          let conditionMet = false;
-          switch (operatorData) {
-            case '=':
-              conditionMet = subArray[i] === valueData;
-              break;
-            case '<>':
-              conditionMet = subArray[i] !== valueData;
-              break;
-          }
-          if (conditionMet) {
-            subArray.splice(i, 1);
-          }
+      // the iteration is done in reverse to prevent resafeling of the array order which is performed with the splice method
+      for (
+        let level2_index = filterArray[fieldIndex].length - 1;
+        level2_index >= 0;
+        level2_index--
+      ) {
+        let subArray = filterArray[fieldIndex][level2_index];
+        // Apply filter based on operator
+        let conditionMet = false;
+        switch (operatorData) {
+          case '=':
+            conditionMet = subArray === valueData;
+            break;
+          case '<>':
+            conditionMet = subArray !== valueData;
+            break;
         }
-      });
-      console.log('Updated filterArray: ', filterArray);
+        if (conditionMet) {
+          filterArray.forEach(function (item) {
+            item.splice(level2_index, 1);
+          });
+        }
+      }
     }
 
-    if (
-      filterArray.length > 0 &&
-      filterArray.some((subArray) => subArray.length > 0)
-    ) {
+    if (filterArray.length > 0) {
       updateOrCreateTable(table, level1_arr, filterArray, 'filter');
     } else {
       updateOrCreateTable(table, level1_arr, level2_arr, 'new');
     }
+
+    // if (
+    //   filterArray.length > 0 &&
+    //   filterArray.some((subArray) => subArray.length > 0)
+    // ) {
+    //   updateOrCreateTable(table, level1_arr, filterArray, 'filter');
+    // } else {
+    //   updateOrCreateTable(table, level1_arr, level2_arr, 'new');
+    // }
   }
+}
+
+function removeDuplicates(filterArray) {
+  const uniqueSet = new Set();
+  //create new empty multidimentional array
+  const newFilterArray = Array(filterArray.length)
+    .fill()
+    .map(() => []);
+
+  // Assuming all columns in filterArray have the same length
+  for (let i = 0; i < filterArray[0].length; i++) {
+    const row = filterArray.map((column) => column[i]);
+    const serializedRow = JSON.stringify(row);
+
+    if (!uniqueSet.has(serializedRow)) {
+      uniqueSet.add(serializedRow);
+      row.forEach((item, index) => {
+        newFilterArray[index].push(item);
+      });
+    }
+  }
+
+  return newFilterArray;
 }

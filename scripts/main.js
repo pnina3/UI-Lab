@@ -14,7 +14,6 @@ const filterArray = [];
 
 const mainContainer = document.getElementById('main-container');
 const fieldsContainer = document.getElementById('fields-container'); // Ensure correct spelling if it's different in HTML
-console.log(fieldsContainer);
 const addButton = document.querySelector('.add_tag');
 const clearAllButton = document.getElementById('clear_all');
 const submitButton = document.createElement('button');
