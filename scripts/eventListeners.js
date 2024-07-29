@@ -33,6 +33,8 @@ export function initializeEventListeners(
     generatedID = 0,
   } = variables;
 
+  //nwe comment
+
   // Assuming you have a div with id 'table-container' in your HTML to append the table
   // document
   //   .getElementById('table-container')
