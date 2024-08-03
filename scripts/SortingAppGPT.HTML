@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sorting exercise </title>
+
+</head>
+<body>
+
+ <script>
+        const level2Arr = [
+            ['Spain', 'Israel', 'Mexico', 'Italy', 'Brazil', 'Canada'],
+            ['Europe', 'Asia', 'America', 'Europe', 'America', 'America'],
+            ['Spanish', 'Hebrew', 'Spanish', 'Italian', 'Portuguese', 'English'],
+            ['20', '25', '25', '20', '45', '25'],
+        ];
+
+        const sortedColumnIndex = 1; // Column to sort by
+        const sortArr = level2Arr[sortedColumnIndex]
+            .map((item, index) => ({ item, index })) // Create an array of objects with item and index
+            .sort((a, b) => a.item.localeCompare(b.item)); // Sort by the item property
+
+        // Create a new sorted array
+        const sortedLevel2Arr = level2Arr.map(row =>
+            sortArr.map(({ index }) => row[index])
+        );
+
+        console.log(sortedLevel2Arr);
+    </script>
+               
+
+    
+</body>
+</html>
