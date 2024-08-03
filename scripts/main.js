@@ -18,6 +18,7 @@ const addButton = document.querySelector('.add_tag');
 const clearAllButton = document.getElementById('clear_all');
 const submitButton = document.createElement('button');
 const table = document.getElementById('data-table'); // Ensure this exists in your HTML or create it
+const tableHeader = document.querySelector('thead');
 
 submitButton.classList.add('submit');
 submitButton.textContent = 'Submit';
@@ -53,6 +54,7 @@ initializeEventListeners(
   clearAllButton,
   submitButton,
   table,
+  tableHeader,
   filterArray,
   tagsArray,
   {

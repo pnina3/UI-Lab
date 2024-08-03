@@ -66,10 +66,17 @@ export function updateOrCreateTable(table, level1_arr, level2_arr, action) {
   // Create the header row if it's empty
   if (thead.rows.length === 0) {
     const headerRow = document.createElement('tr');
-    level1_arr.forEach((headerText) => {
+    level1_arr.forEach((headerText, index) => {
       const header = document.createElement('th');
-      header.textContent = headerText;
       headerRow.appendChild(header);
+      header.setAttribute('id', index);
+
+      const textDiv = document.createElement('div');
+      textDiv.textContent = headerText;
+      header.appendChild(textDiv);
+      const sortDiv = document.createElement('div');
+      sortDiv.innerHTML = '<i class="fa-solid fa-sort"></i>';
+      header.appendChild(sortDiv);
     });
     thead.appendChild(headerRow);
   }

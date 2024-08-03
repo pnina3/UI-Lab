@@ -19,6 +19,7 @@ export function initializeEventListeners(
   clearAllButton,
   submitButton,
   table,
+  tableHeader,
   filterArray,
   tagsArray,
   variables
@@ -170,6 +171,27 @@ export function initializeEventListeners(
         }
       });
     }
+  });
+
+  tableHeader.addEventListener('click', function (e) {
+    const target = e.target.closest('th');
+    const icon = target.querySelector('i');
+    const sortState = icon.className;
+    switch (sortState) {
+      case 'fa-solid fa-sort':
+        icon.classList.remove('fa-sort');
+        icon.classList.add('fa-sort-up');
+        break;
+      case 'fa-solid fa-sort-up':
+        icon.classList.remove('fa-sort-up');
+        icon.classList.add('fa-sort-down');
+        break;
+      case 'fa-solid fa-sort-down':
+        icon.classList.remove('fa-sort-down');
+        icon.classList.add('fa-sort');
+        break;
+    }
+    sortTable(target.id);
   });
 
   //REMOVE TAG BOX when clicking on the document
@@ -394,4 +416,9 @@ function removeDuplicates(filterArray) {
   }
 
   return newFilterArray;
+}
+function sortTable(id) {
+  console.log(id);
+  let sortedCol = level2_arr[id].sort();
+  console.log(sortedCol);
 }
