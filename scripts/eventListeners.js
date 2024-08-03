@@ -177,21 +177,26 @@ export function initializeEventListeners(
     const target = e.target.closest('th');
     const icon = target.querySelector('i');
     const sortState = icon.className;
+    let isAscending;
     switch (sortState) {
       case 'fa-solid fa-sort':
         icon.classList.remove('fa-sort');
         icon.classList.add('fa-sort-up');
+        isAscending = true;
         break;
       case 'fa-solid fa-sort-up':
         icon.classList.remove('fa-sort-up');
         icon.classList.add('fa-sort-down');
+        isAscending = false;
         break;
       case 'fa-solid fa-sort-down':
         icon.classList.remove('fa-sort-down');
         icon.classList.add('fa-sort');
+        isAscending = null;
         break;
     }
-    sortTable(target.id);
+
+    sortTable(target.id,table,isAscending);
   });
 
   //REMOVE TAG BOX when clicking on the document
@@ -384,14 +389,6 @@ function manageFilters(
       updateOrCreateTable(table, level1_arr, level2_arr, 'new');
     }
 
-    // if (
-    //   filterArray.length > 0 &&
-    //   filterArray.some((subArray) => subArray.length > 0)
-    // ) {
-    //   updateOrCreateTable(table, level1_arr, filterArray, 'filter');
-    // } else {
-    //   updateOrCreateTable(table, level1_arr, level2_arr, 'new');
-    // }
   }
 }
 //test comment 123
@@ -417,8 +414,30 @@ function removeDuplicates(filterArray) {
 
   return newFilterArray;
 }
-function sortTable(id) {
-  console.log(id);
-  let sortedCol = level2_arr[id].sort();
-  console.log(sortedCol);
+function sortTable(id,table,isAscending) {
+  const sortedColumnIndex = id; // Column to sort by
+ 
+  let sortedLevel2Arr;
+
+ if (isAscending === null) {
+
+ 
+    sortedLevel2Arr = level2_arr.map(row => [...row]);
+    } else {
+      console.log(sortedColumnIndex)
+        const sortArr = level2_arr[sortedColumnIndex]
+            .map((item, index) => ({ item, index })) // Create an array of objects with item and index
+            .sort((a, b) => isAscending 
+            ? a.item.localeCompare(b.item)  // Ascending sort
+            : b.item.localeCompare(a.item)  // Descending sort
+        ); 
+           // Create a new sorted array
+           sortedLevel2Arr = level2_arr.map(row =>
+            sortArr.map(({ index }) => row[index])
+        );
+       }; 
+     
+        console.log(sortedLevel2Arr)
+        updateOrCreateTable(table, level1_arr, sortedLevel2Arr, 'sort');
+
 }

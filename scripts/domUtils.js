@@ -56,7 +56,7 @@ export function updateOrCreateTable(table, level1_arr, level2_arr, action) {
   if (!tbody) {
     tbody = document.createElement('tbody');
     table.appendChild(tbody);
-  } else if (action === 'filter') {
+  } else if (action === 'filter' || action === 'sort') {
     // Clear existing rows if filtering
     while (tbody.firstChild) {
       tbody.removeChild(tbody.firstChild);
