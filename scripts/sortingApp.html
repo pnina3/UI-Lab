@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sorting exercise </title>
+    <style>
+        ul {
+            display:flex;
+            direction:row;
+        }
+        ul, ol {
+             list-style: none;
+        }
+        li{
+            border:1px solid #666;
+            padding:5px;
+        }
+    </style>
+</head>
+<body>
+
+   
+    <script>
+            const level2_arr = [
+            ['Spain', 'Israel', 'Mexico', 'Italy', 'Brazil', 'Kanada'],
+            ['Europe', 'Asia', 'America', 'Europe', 'America', 'America'],
+            ['Spanish', 'Hebrew', 'Spanish', 'Italian', 'Portugess', 'English'],
+            ['20', '25', '25', '20', '45', '25'],
+            ];
+
+
+            const sortedColumnIndex = 1;
+            const previousIndexesArr = [];
+            const level2_arrNew = JSON.parse(JSON.stringify(level2_arr));
+            const sort_arr = [];
+            const originalRow = level2_arr[sortedColumnIndex].map((item,index)=>{
+                return item
+            });
+           
+            const sortedRow = level2_arr[sortedColumnIndex].sort();
+            console.log(sortedRow)
+          
+            sortedRow.forEach((item,index)=>{
+               let originalNum = originalRow.indexOf(item)
+               previousIndexesArr[index] = originalNum;
+               originalRow[originalNum] = "undefined";
+            });
+
+            
+         for(i=0;i<level2_arrNew.length;i++){
+            level2_arrNew[i].forEach((item,index)=>{
+                sort_arr.push([])
+                let previousIndex = [previousIndexesArr[index]];     
+                sort_arr[i].push(level2_arrNew[i][previousIndex]);
+               })
+
+         }
+             
+         console.log(sort_arr);
+
+
+
+               
+             
+
+          
+            
+
+    </script>
+    
+</body>
+</html>
